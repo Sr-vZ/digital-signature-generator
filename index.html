@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Digital Signature Assistance</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <div id="main_template" class="container mx-auto p-4 border-3 shadow-xl">
+        <div class="align-middle p-4">
+            <p class="text-base text-xl font-bold">
+                <span>
+                    <i class="far fa-circle text-green-500 text-xl fa-3x align-middle"></i>
+                </span> Digital Signature Assistance
+            </p>
+        </div>
+        <div class="grid grid grid-cols-1 rounded-md content-center">
+
+
+            <div class="align-middle self-auto py-4 px-12">
+                <!-- button -->
+                <button id="main_btn_add" type="button"
+                    class="group relative w-2/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="far fa-plus-square text-white-500 fa-2x align middle"></i>
+                    </span>
+                    Add
+                </button>
+
+            </div>
+        </div>
+    </div>
+    <!-- create signature -->
+    <div id="create_signature_template" class="container mx-auto p-4 border-3 shadow-xl">
+        <div class="align-middle p-4">
+            <p class="text-base text-xl font-bold">
+                <span>
+                    <i class="far fa-circle text-green-500 text-xl fa-3x align-middle"></i>
+                </span> Create Signature
+            </p>
+        </div>
+        <div class="grid grid grid-cols-1 rounded-md">
+            <!-- buttons -->
+            <div class="flex justify-end py-4 px-12 gap-4">
+                <button id="draw_btn_signature" type="button"
+                    class="group relative w-1/2 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Draw Signature
+                </button>
+                <button id="draw_btn_type" type="button"
+                    class="group relative w-1/2 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Type Signature
+                </button>
+            </div>
+            <!-- canvas -->
+            <div class="align-middle self-auto py-4 px-12">
+                <p class="px-2 ">Preview signature</p>
+                <div class="border-3 w-full rounded-lg border-2 shadow-outline">
+                    <canvas id="draw_initial_canvas" class="w-full"></canvas>
+                </div>
+            </div>
+            <!-- canvas -->
+            <div class="align-middle self-auto py-4 px-12">
+                <p class="px-2 ">Preview initial</p>
+                <div class="border-3 w-full rounded-lg border-2 shadow-outline">
+                    <canvas id="draw_initial_canvas" class="w-full"></canvas>
+                </div>
+            </div>
+            <!-- buttons -->
+            <div class="flex justify-end py-4 px-12 gap-4">
+                <button id="create_btn_ok" type="button"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save
+                </button>
+                <button id="create_btn_cancel" type="button"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- draw signature -->
+    <div id="draw_signature_template" class="container mx-auto p-4 border-3 shadow-xl">
+        <div class="align-middle p-4">
+            <p class="text-base text-xl font-bold">
+                <span>
+                    <i class="far fa-circle text-green-500 text-xl fa-3x align-middle"></i>
+                </span> Draw Signature
+            </p>
+        </div>
+        <div class="grid grid grid-cols-1 rounded-md">
+            <!-- canvas -->
+            <div class="align-middle self-auto py-4 px-12">
+                <p class="px-2">Draw signature here</p>
+                <div class="border-3 w-full rounded-lg border-2 shadow-outline">
+                    <canvas id="draw_signature_canvas" class="w-full"></canvas>
+                </div>
+            </div>
+            <!-- buttons -->
+            <div class="flex justify-end py-4 px-12 gap-4">
+                <button id="btnAdd" type="button" onclick="clearCanvas('draw_signature_canvas')"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Clear
+                </button>
+            </div>
+            <!-- canvas -->
+            <div class="align-middle self-auto py-4 px-12">
+                <p class="px-2 ">Draw initials here</p>
+                <div class="border-3 w-full rounded-lg border-2 shadow-outline">
+                    <canvas id="draw_initial_canvas" class="w-full"></canvas>
+                </div>
+            </div>
+            <!-- buttons -->
+            <div class="flex justify-end py-4 px-12 gap-4">
+                <button id="btnAdd" type="button" onclick="clearCanvas('draw_initial_canvas')"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Clear
+                </button>
+            </div>
+            <!-- buttons -->
+            <div class="flex justify-end py-4 px-12 gap-4">
+                <button id="draw_btn_ok" type="button"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    OK
+                </button>
+                <button id="draw_btn_cancel" type="button"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- type signature -->
+    <div id="type_signature_template" class="container mx-auto p-4 border-3 shadow-xl">
+        <div class="align-middle p-4">
+            <p class="text-base text-xl font-bold">
+                <span>
+                    <i class="far fa-circle text-green-500 text-xl fa-3x align-middle"></i>
+                </span> Type Signature
+            </p>
+        </div>
+        <div class="grid grid grid-cols-1 rounded-md">
+            <!-- inputs -->
+            <div class="align-middle self-auto py-4 px-12">
+                <div class="text-gray-700 md:flex md:items-center">
+                    <div class="mb-1 md:mb-0 md:w-1/3">
+                        <label for="forms-labelLeftInputCode">Type Signature </label>
+                    </div>
+                    <div class="md:w-2/3 md:flex-grow">
+                        <input
+                            class="w-full h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"
+                            type="text" placeholder="" id="ts_inp_sign" />
+                    </div>
+                </div>
+            </div>
+            <div class="align-middle self-auto py-4 px-12">
+                <div class="text-gray-700 md:flex md:items-center">
+                    <div class="mb-1 md:mb-0 md:w-1/3">
+                        <label for="forms-labelLeftInputCode">Type Initial </label>
+                    </div>
+                    <div class="md:w-2/3 md:flex-grow">
+                        <input
+                            class="w-full h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"
+                            type="text" placeholder="" id="ts_inp_initial" />
+                    </div>
+                </div>
+            </div>
+            <!-- canvas -->
+            <div class="align-middle self-auto py-4 px-12">
+                <div class="border-3 w-full rounded-lg border-2 shadow-outline">
+                    <canvas id="type_signature_canvas" class="w-full"></canvas>
+                </div>
+            </div>
+            <div class="align-middle self-auto py-4 px-12">
+                <div class="border-3 w-full rounded-lg border-2 shadow-outline">
+                    <canvas id="type_initials_canvas" class="w-full"></canvas>
+                </div>
+            </div>
+
+            <!-- buttons -->
+            <div class="flex justify-end py-4 px-12 gap-4">
+                <button id="type_btn_ok" type="button"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    OK
+                </button>
+                <button id="type_btn_cancel" type="button"
+                    class="group relative w-1/4 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@3.0.0-beta.4/dist/signature_pad.umd.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+
+</html>

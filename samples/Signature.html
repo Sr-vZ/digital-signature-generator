@@ -1,0 +1,191 @@
+<html>
+    <script type="text/javascript">
+    var canvas, canvasInit, ctx, ctxInit, flag = false,
+        prevX = 0,
+        currX = 0,
+        prevY = 0,
+        currY = 0,
+        dot_flag = false;
+
+    var x = "black",
+        y = 2;
+    
+    function init() {
+        canvas = document.getElementById('can');
+		canvasInit = document.getElementById('canInitial');
+        ctx = canvas.getContext("2d");
+		ctxInit = canvasInit.getContext("2d");
+        w = canvas.width;
+        h = canvas.height;
+    
+        canvas.addEventListener("mousemove", function (e) {
+            findxy('move', e, canvas, ctx)
+        }, false);
+        canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e, canvas, ctx)
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e, canvas, ctx)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e, canvas, ctx)
+        }, false);
+		
+		canvasInit.addEventListener("mousemove", function (e) {
+            findxy('move', e, canvasInit, ctxInit)
+        }, false);
+        canvasInit.addEventListener("mousedown", function (e) {
+            findxy('down', e, canvasInit, ctxInit)
+        }, false);
+        canvasInit.addEventListener("mouseup", function (e) {
+            findxy('up', e, canvasInit, ctxInit)
+        }, false);
+        canvasInit.addEventListener("mouseout", function (e) {
+            findxy('out', e, canvasInit, ctxInit)
+        }, false);
+    }
+    
+	function color(obj) {
+        switch (obj.id) {
+            case "green":
+                x = "green";
+                break;
+            case "blue":
+                x = "blue";
+                break;
+            case "red":
+                x = "red";
+                break;
+            case "yellow":
+                x = "yellow";
+                break;
+            case "orange":
+                x = "orange";
+                break;
+            case "black":
+                x = "black";
+                break;
+            case "white":
+                x = "white";
+                break;
+        }
+        if (x == "white") y = 14;
+        else y = 2;
+    
+    }
+	
+	function draw() {
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        ctx.strokeStyle = x;
+        ctx.lineWidth = y;
+        ctx.stroke();
+        ctx.closePath();
+    }
+	
+	function draw(ctxy){
+		ctxy.beginPath();
+        ctxy.moveTo(prevX, prevY);
+        ctxy.lineTo(currX, currY);
+        ctxy.strokeStyle = x;
+        ctxy.lineWidth = y;
+        ctxy.stroke();
+        ctxy.closePath();
+	}
+    
+    function erase() {
+        var m = confirm("Want to clear");
+        if (m) {
+            ctx.clearRect(0, 0, w, h);
+            document.getElementById("canvasimg").style.display = "none";
+        }
+    }
+    
+    function save() {
+        document.getElementById("canvasimg").style.border = "2px solid";
+        var dataURL = canvas.toDataURL();
+        document.getElementById("canvasimg").src = dataURL;
+        document.getElementById("canvasimg").style.display = "inline";
+    }
+	
+	function findxy(res, e) {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
+    
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctx.beginPath();
+                ctx.fillStyle = x;
+                ctx.fillRect(currX, currY, 2, 2);
+                ctx.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        }
+    }
+	
+	function findxy(res, e, canvasV, ctxV) {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvasV.offsetLeft;
+            currY = e.clientY - canvasV.offsetTop;
+    
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctxV.beginPath();
+                ctxV.fillStyle = x;
+                ctxV.fillRect(currX, currY, 2, 2);
+                ctxV.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvasV.offsetLeft;
+                currY = e.clientY - canvasV.offsetTop;
+                draw(ctxV);
+            }
+        }
+    }
+	
+    </script>
+    <body onload="init()">
+        <canvas id="can" width="400" height="200" style="position:absolute;top:10;left:10;border:2px solid;"></canvas>
+		<canvas id="canInitial" width="400" height="200" style="position:absolute;top:220;left:10;border:2px solid;display:none;"></canvas>
+        <div style="position:absolute;top:22%;left:43%;display:none;">Choose Color</div>
+        <div style="position:absolute;top:25%;left:45%;width:10px;height:10px;background:green;display:none;" id="green" onclick="color(this)"></div>
+        <div style="position:absolute;top:25%;left:46%;width:10px;height:10px;background:blue;display:none;" id="blue" onclick="color(this)"></div>
+        <div style="position:absolute;top:25%;left:47%;width:10px;height:10px;background:red;display:none;" id="red" onclick="color(this)"></div>
+        <div style="position:absolute;top:27%;left:45%;width:10px;height:10px;background:yellow;display:none;" id="yellow" onclick="color(this)"></div>
+        <div style="position:absolute;top:27%;left:46%;width:10px;height:10px;background:orange;display:none;" id="orange" onclick="color(this)"></div>
+        <div style="position:absolute;top:27%;left:47%;width:10px;height:10px;background:black;display:none;" id="black" onclick="color(this)"></div>
+        <div style="position:absolute;top:30%;left:43%;display:none;">Eraser</div>
+        <div style="position:absolute;top:32%;left:45%;width:15px;height:15px;background:white;border:2px solid;display:none;" id="white" onclick="color(this)"></div>
+        <img id="canvasimg" style="position:absolute;top:220;left:10;border:2px solid;" style="display:none;">
+        <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:65%;left:10%;">
+        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:65%;left:25%;">
+    </body>
+    </html>
