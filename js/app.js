@@ -5,7 +5,8 @@ type_teamplate = document.getElementById('type_signature_template')
 main_teamplate = document.getElementById('main_template')
 current_window = main_teamplate
 previous_window = main_teamplate
-
+signature_datastore = []
+entries = 1
 document.addEventListener('DOMContentLoaded', function () {
     // do something
     init()
@@ -44,14 +45,17 @@ function init() {
         type_btn_cancel()
     })
 
-    document.getElementById('ts_inp_sign').addEventListener('change', function () {
+    document.getElementById('ts_inp_sign').addEventListener('keyup', function () {
         ts_inp_sign_change()
     })
 
-    document.getElementById('ts_inp_initial').addEventListener('change', function () {
+    document.getElementById('ts_inp_initial').addEventListener('keyup', function () {
         ts_inp_initial_change()
     })
 
+    document.getElementById('type_btn_ok').addEventListener('click', function () {
+        type_btn_ok()
+    })
 }
 
 
@@ -94,6 +98,7 @@ function type_btn_cancel() {
 }
 
 function create_btn_cancel() {
+    show_stored_signatures()
     create_teamplate.style.display = "none"
     main_teamplate.style.display = "block"
 }
@@ -107,7 +112,16 @@ function type_btn_ok() {
     if (isCanvasBlank(initial_canvas)) {
         alert('initials is empty!')
     }
-    sign_canvas.toDataURL
+    temp = {
+        "id": entries,
+        "sign": resizeCanvas('type_signature_canvas', 100, 50),
+        "initial": resizeCanvas('type_initials_canvas', 50, 50)
+    }
+    signature_datastore.push(temp)
+    entries++
+    l = signature_datastore.length
+    previewImage('preview_sign', signature_datastore[l - 1]['sign'])
+    previewImage('preview_initial', signature_datastore[l - 1]['initial'])
     type_teamplate.style.display = "none"
     create_teamplate.style.display = "block"
 
@@ -159,4 +173,33 @@ function resizeCanvas(oldCanvas_id, width, height) {
 
     resizedCanvas.height = height;
     resizedCanvas.width = width;
+
+    resizedContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height);
+    var ResizedData = resizedCanvas.toDataURL();
+    console.log(ResizedData)
+    return ResizedData
+
+}
+
+function previewImage(canvas_id, img_data) {
+    var myCanvas = document.getElementById(canvas_id);
+    var ctx = myCanvas.getContext('2d');
+    var img = new Image;
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, myCanvas.width, myCanvas.height); // Or at whatever offset you like
+    };
+    img.src = img_data;
+}
+
+function show_stored_signatures() {
+    if (signature_datastore.length > 0) {
+        document.getElementById('sign_store').innerHTML = ""
+        for (i = 0; i < signature_datastore.length; i++) {
+            var div = document.createElement('div')
+            div.className = 'flex py-2 px-12 gap-4 border-2 rounded-md'
+            // <div class="border-3"></div>
+            div.innerHTML = '<div class="border-3"><p>'+signature_datastore[i].id+'</p></div> <img  src="' + signature_datastore[i].sign + '"></img><img class="border-3" src="' + signature_datastore[i].initial + '"></img>'
+            document.getElementById('sign_store').appendChild(div)
+        }
+    }
 }
