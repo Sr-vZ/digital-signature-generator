@@ -111,9 +111,9 @@ function create_btn_cancel() {
 function create_btn_save() {
     l = signature_datastore.length
     img_data = signature_datastore[l - 1]['sign']
-    download(img_data, 'signature.png')
+    // download(img_data, 'signature.png')
     img_data = signature_datastore[l - 1]['initial']
-    download(img_data, 'initial.png')
+    // download(img_data, 'initial.png')
     show_stored_signatures()
     create_template.style.display = "none"
     main_template.style.display = "block"
@@ -132,14 +132,18 @@ function type_btn_ok() {
     }
     temp = {
         "id": entries,
+        "preview_sign": sign_canvas.toDataURL(),
+        "preview_initial": initial_canvas.toDataURL(),
         "sign": resizeCanvas('type_signature_canvas', 100, 50),
         "initial": resizeCanvas('type_initials_canvas', 50, 50)
     }
+
+    signature_datastore = []
     signature_datastore.push(temp)
     entries++
     l = signature_datastore.length
-    previewImage('preview_sign', signature_datastore[l - 1]['sign'])
-    previewImage('preview_initial', signature_datastore[l - 1]['initial'])
+    previewImage('preview_sign', signature_datastore[l - 1]['preview_sign'])
+    previewImage('preview_initial', signature_datastore[l - 1]['preview_initial'])
     type_template.style.display = "none"
     create_template.style.display = "block"
 }
@@ -160,8 +164,8 @@ function initiate_signaturepad() {
 
     var sign_signaturePad = new SignaturePad(sign_canvas)
     var initial_signaturePad = new SignaturePad(initial_canvas)
-    fixAspectCanvas(sign_canvas,sign_signaturePad)
-    fixAspectCanvas(initial_canvas,initial_signaturePad)
+    fixAspectCanvas(sign_canvas, sign_signaturePad)
+    fixAspectCanvas(initial_canvas, initial_signaturePad)
     // return [sign_signaturePad,initial_signaturePad]
     // document.addEventListener('')
     document.getElementById('draw_btn_ok').addEventListener('click', function () {
@@ -176,14 +180,16 @@ function initiate_signaturepad() {
         }
         temp = {
             "id": entries,
+            "preview_sign": sign_canvas.toDataURL(),
+            "preview_initial": initial_canvas.toDataURL(),
             "sign": resizeCanvas('draw_signature_canvas', 100, 50),
             "initial": resizeCanvas('draw_initial_canvas', 50, 50)
         }
         signature_datastore.push(temp)
         entries++
         l = signature_datastore.length
-        previewImage('preview_sign', signature_datastore[l - 1]['sign'])
-        previewImage('preview_initial', signature_datastore[l - 1]['initial'])
+        previewImage('preview_sign', signature_datastore[l - 1]['preview_sign'])
+        previewImage('preview_initial', signature_datastore[l - 1]['preview_initial'])
         draw_template.style.display = "none"
         create_template.style.display = "block"
     })
@@ -227,8 +233,9 @@ function resizeCanvas(oldCanvas_id, width, height) {
     resizedCanvas.width = width;
 
     resizedContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height);
+    // var ResizedData = resizedCanvas.toDataURL('image/jpeg');
     var ResizedData = resizedCanvas.toDataURL();
-    console.log(ResizedData)
+    // console.log(ResizedData)
     return ResizedData
 
 }
@@ -236,6 +243,7 @@ function resizeCanvas(oldCanvas_id, width, height) {
 function previewImage(canvas_id, img_data) {
     var myCanvas = document.getElementById(canvas_id);
     var ctx = myCanvas.getContext('2d');
+    ctx.clearRect(0, 0, myCanvas.width, myCanvas.height)
     var img = new Image;
     img.onload = function () {
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, myCanvas.width, myCanvas.height); // Or at whatever offset you like
@@ -250,7 +258,7 @@ function show_stored_signatures() {
             var div = document.createElement('div')
             div.className = 'flex py-2 px-12 gap-4 border-2 rounded-md'
             // <div class="border-3"></div>
-            div.innerHTML = '<div class="align-middle"><p>' + signature_datastore[i].id + '</p></div> <img  src="' + signature_datastore[i].sign + '"></img><img class="border-3" src="' + signature_datastore[i].initial + '"></img>'
+            div.innerHTML = '<img  src="' + signature_datastore[i].sign + '"></img><img src="' + signature_datastore[i].initial + '"></img>'
             document.getElementById('sign_store').appendChild(div)
         }
     }
@@ -303,7 +311,7 @@ function dataURLtoBlob(dataURI) {
 }
 
 function fixAspectCanvas(canvas) {
-    var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+    var ratio = Math.max(window.devicePixelRatio || 1, 1);
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = canvas.offsetHeight * ratio;
     canvas.getContext("2d").scale(ratio, ratio);
