@@ -1,10 +1,10 @@
 // globals
-create_teamplate = document.getElementById('create_signature_template')
-draw_teamplate = document.getElementById('draw_signature_template')
-type_teamplate = document.getElementById('type_signature_template')
-main_teamplate = document.getElementById('main_template')
-current_window = main_teamplate
-previous_window = main_teamplate
+create_template = document.getElementById('create_signature_template')
+draw_template = document.getElementById('draw_signature_template')
+type_template = document.getElementById('type_signature_template')
+main_template = document.getElementById('main_template')
+current_window = main_template
+previous_window = main_template
 signature_datastore = []
 entries = 1
 document.addEventListener('DOMContentLoaded', function () {
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function init() {
     console.log('body loaded!')
     hideAll()
-    current_window = main_teamplate
+    current_window = main_template
     document.getElementById('main_btn_add').addEventListener('click', function () {
         main_btn_add_click()
     })
@@ -56,51 +56,67 @@ function init() {
     document.getElementById('type_btn_ok').addEventListener('click', function () {
         type_btn_ok()
     })
+
+    document.getElementById('create_btn_save').addEventListener('click', function () {
+        create_btn_save()
+    })
 }
 
 
 
 function hideAll() {
-    create_teamplate.style.display = "none"
-    draw_teamplate.style.display = "none"
-    type_teamplate.style.display = "none"
+    create_template.style.display = "none"
+    draw_template.style.display = "none"
+    type_template.style.display = "none"
 }
 
 function main_btn_add_click() {
-    main_teamplate.style.display = "none"
-    create_teamplate.style.display = "block"
-    current_window = create_teamplate
-    previous_window = main_teamplate
+    main_template.style.display = "none"
+    create_template.style.display = "block"
+    current_window = create_template
+    previous_window = main_template
 }
 
 function draw_btn_signature_click() {
-    create_teamplate.style.display = "none"
-    draw_teamplate.style.display = "block"
-    current_window = draw_teamplate
-    previous_window = create_teamplate
+    create_template.style.display = "none"
+    draw_template.style.display = "block"
+    initiate_signaturepad()
+    current_window = draw_template
+    previous_window = create_template
 }
 
 function draw_btn_type_click() {
-    create_teamplate.style.display = "none"
-    type_teamplate.style.display = "block"
-    current_window = type_teamplate
-    previous_window = create_teamplate
+    create_template.style.display = "none"
+    type_template.style.display = "block"
+    current_window = type_template
+    previous_window = create_template
 }
 
 function draw_btn_cancel() {
-    draw_teamplate.style.display = "none"
-    create_teamplate.style.display = "block"
+    draw_template.style.display = "none"
+    create_template.style.display = "block"
 }
 
 function type_btn_cancel() {
-    type_teamplate.style.display = "none"
-    create_teamplate.style.display = "block"
+    type_template.style.display = "none"
+    create_template.style.display = "block"
 }
 
 function create_btn_cancel() {
     show_stored_signatures()
-    create_teamplate.style.display = "none"
-    main_teamplate.style.display = "block"
+    create_template.style.display = "none"
+    main_template.style.display = "block"
+}
+
+function create_btn_save() {
+    l = signature_datastore.length
+    img_data = signature_datastore[l - 1]['sign']
+    download(img_data, 'signature.png')
+    img_data = signature_datastore[l - 1]['initial']
+    download(img_data, 'initial.png')
+    show_stored_signatures()
+    create_template.style.display = "none"
+    main_template.style.display = "block"
 }
 
 function type_btn_ok() {
@@ -108,9 +124,11 @@ function type_btn_ok() {
     initial_canvas = document.getElementById('type_initials_canvas')
     if (isCanvasBlank(sign_canvas)) {
         alert('Signature is empty!')
+        return 0
     }
     if (isCanvasBlank(initial_canvas)) {
         alert('initials is empty!')
+        return 0
     }
     temp = {
         "id": entries,
@@ -122,9 +140,8 @@ function type_btn_ok() {
     l = signature_datastore.length
     previewImage('preview_sign', signature_datastore[l - 1]['sign'])
     previewImage('preview_initial', signature_datastore[l - 1]['initial'])
-    type_teamplate.style.display = "none"
-    create_teamplate.style.display = "block"
-
+    type_template.style.display = "none"
+    create_template.style.display = "block"
 }
 
 function ts_inp_sign_change() {
@@ -135,6 +152,41 @@ function ts_inp_sign_change() {
 function ts_inp_initial_change() {
     text_content = document.getElementById('ts_inp_initial').value
     canvasWrite('type_initials_canvas', text_content)
+}
+
+function initiate_signaturepad() {
+    var sign_canvas = document.getElementById('draw_signature_canvas')
+    var initial_canvas = document.getElementById('draw_initial_canvas')
+
+    var sign_signaturePad = new SignaturePad(sign_canvas)
+    var initial_signaturePad = new SignaturePad(initial_canvas)
+    fixAspectCanvas(sign_canvas,sign_signaturePad)
+    fixAspectCanvas(initial_canvas,initial_signaturePad)
+    // return [sign_signaturePad,initial_signaturePad]
+    // document.addEventListener('')
+    document.getElementById('draw_btn_ok').addEventListener('click', function () {
+        // create_btn_save()
+        if (isCanvasBlank(sign_canvas)) {
+            alert('Signature is empty!')
+            return 0
+        }
+        if (isCanvasBlank(initial_canvas)) {
+            alert('Signature is empty!')
+            return 0
+        }
+        temp = {
+            "id": entries,
+            "sign": resizeCanvas('draw_signature_canvas', 100, 50),
+            "initial": resizeCanvas('draw_initial_canvas', 50, 50)
+        }
+        signature_datastore.push(temp)
+        entries++
+        l = signature_datastore.length
+        previewImage('preview_sign', signature_datastore[l - 1]['sign'])
+        previewImage('preview_initial', signature_datastore[l - 1]['initial'])
+        draw_template.style.display = "none"
+        create_template.style.display = "block"
+    })
 }
 
 function canvasWrite(canvas_id, content) {
@@ -198,8 +250,62 @@ function show_stored_signatures() {
             var div = document.createElement('div')
             div.className = 'flex py-2 px-12 gap-4 border-2 rounded-md'
             // <div class="border-3"></div>
-            div.innerHTML = '<div class="border-3"><p>'+signature_datastore[i].id+'</p></div> <img  src="' + signature_datastore[i].sign + '"></img><img class="border-3" src="' + signature_datastore[i].initial + '"></img>'
+            div.innerHTML = '<div class="align-middle"><p>' + signature_datastore[i].id + '</p></div> <img  src="' + signature_datastore[i].sign + '"></img><img class="border-3" src="' + signature_datastore[i].initial + '"></img>'
             document.getElementById('sign_store').appendChild(div)
         }
     }
+}
+
+function download(dataURL, filename) {
+    if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") === -1) {
+        window.open(dataURL);
+    } else {
+        var blob = dataURLtoBlob(dataURL);
+        var url = window.URL.createObjectURL(blob);
+
+        var a = document.createElement("a");
+        a.style = "display: none";
+        a.href = url;
+        a.download = filename;
+
+        document.body.appendChild(a);
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+    }
+}
+
+function dataURLtoBlob(dataURI) {
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    var byteString = atob(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length);
+
+    // create a view into the buffer
+    var ia = new Uint8Array(ab);
+
+    // set the bytes of the buffer to the correct values
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    // write the ArrayBuffer to a blob, and you're done
+    var blob = new Blob([ab], {
+        type: mimeString
+    });
+    return blob;
+
+}
+
+function fixAspectCanvas(canvas) {
+    var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+    //signpad.clear(); // otherwise isEmpty() might return incorrect value
 }
