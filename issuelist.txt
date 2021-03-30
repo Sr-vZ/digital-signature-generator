@@ -1,0 +1,17 @@
+Issue 1 - Images come back with a download. This should be occur. The image should be on the canvas so that it can be used and is only temporary. When app is close, image are gone.
+Done download option disabled in the app
+Issue 2 - Dragging the signature image or signature initial to Word shows a blob rather than an image. An image should show up on Word. I am testing with Word version 16 and Chrome.
+Dragging doesn't work however copy paste works I tested with Edge and Chrome the sample doesn't work either probably modern browser doesn't support this anymore I on't have older IE to test.
+Please see the demo: https://www.loom.com/share/96b56936ae5b492da633166bc1c97233
+Issue 3 - Click the Add button after the draw Signature has been added. The screen comes back show 3 new signatures. The correct result should be only another 1 added not 2.
+Fixed only last signature and initial will show and numbering removed as well
+Issue 4 - Preview should show the correct normal scale of 1. The final result should show the scale of 1/4.
+Done
+Issue 5 - Chrome shows security message "This site attempted to download multiple files automatically".
+Fixed as download disabled
+Issue 6 - Preview should be clean each time a new Signature or Type Signature is created. Currently it overlays on top of the previous Signature created.
+Fixed now
+Issue 7 - Need font selection on Type Signature.
+Done there are 5 options now "Cedarville Cursive" is a custom google font rest are native html fonts
+Issue 8 - The automatic download popup. This should not occur. App should be self contained.
+Fixed as download option is disabled so no more an issue

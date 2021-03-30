@@ -178,6 +178,7 @@ function initiate_signaturepad() {
             alert('Signature is empty!')
             return 0
         }
+        signature_datastore = []
         temp = {
             "id": entries,
             "preview_sign": sign_canvas.toDataURL(),
@@ -201,7 +202,8 @@ function canvasWrite(canvas_id, content) {
     textLength = content.length
     // console.log(textLength)
     fontSize = Math.ceil(50 / Math.ceil(textLength / 10))
-    ctx.font = fontSize + 'px Cedarville Cursive'
+    // ctx.font = fontSize + 'px Cedarville Cursive'
+    ctx.font = fontSize + 'px ' + document.getElementById('fontSelctor').value
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     // ctx.textBaseline = 'top';
     ctx.textAlign = "center";
@@ -231,10 +233,11 @@ function resizeCanvas(oldCanvas_id, width, height) {
 
     resizedCanvas.height = height;
     resizedCanvas.width = width;
-
+    resizedContext.fillStyle = 'white';
+    resizedContext.fillRect(0, 0, width, height);
     resizedContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height);
     // var ResizedData = resizedCanvas.toDataURL('image/jpeg');
-    var ResizedData = resizedCanvas.toDataURL();
+    var ResizedData = resizedCanvas.toDataURL("image/png");
     // console.log(ResizedData)
     return ResizedData
 
@@ -258,7 +261,9 @@ function show_stored_signatures() {
             var div = document.createElement('div')
             div.className = 'flex py-2 px-12 gap-4 border-2 rounded-md'
             // <div class="border-3"></div>
-            div.innerHTML = '<img  src="' + signature_datastore[i].sign + '"></img><img src="' + signature_datastore[i].initial + '"></img>'
+            // <button class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Copy Signature</button>
+            // <button>Copy initial</button>
+            div.innerHTML = '<img id="copy_sign" src="' + signature_datastore[i].sign + '"></img><button onclick="copy_sign()" class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Copy Signature</button><img id="copy_initial" src="' + signature_datastore[i].initial + '"></img><button onclick="copy_initial()" class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Copy Initial</button>'
             document.getElementById('sign_store').appendChild(div)
         }
     }
@@ -280,6 +285,34 @@ function download(dataURL, filename) {
         a.click();
 
         window.URL.revokeObjectURL(url);
+    }
+}
+
+async function download2(dataURL) {
+    if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") === -1) {
+        window.open(dataURL);
+    } else {
+        var blob = dataURLtoBlob(dataURL);
+        var url = window.URL.createObjectURL(blob);
+
+        var a = document.createElement("a");
+        a.style = "display: none";
+        a.href = url;
+        // a.download = filename;
+
+        document.body.appendChild(a);
+        // a.click();
+        console.log(url)
+
+        window.URL.revokeObjectURL(url);
+        // image = await fetch(url)
+        // blob = await image.blob()
+
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                ['image/png']: blob
+            })
+        ])
     }
 }
 
@@ -316,4 +349,26 @@ function fixAspectCanvas(canvas) {
     canvas.height = canvas.offsetHeight * ratio;
     canvas.getContext("2d").scale(ratio, ratio);
     //signpad.clear(); // otherwise isEmpty() might return incorrect value
+}
+
+async function copy_sign() {
+    var copyObj = document.getElementById('copy_sign')
+    var blob = dataURLtoBlob(copyObj.src)
+    // download2(copyObj.src)
+    await navigator.clipboard.write([
+        new ClipboardItem({
+            ['image/png']: blob
+        })
+    ])
+}
+
+async function copy_initial() {
+    var copyObj = document.getElementById('copy_initial')
+    var blob = dataURLtoBlob(copyObj.src)
+    // download2(copyObj.src)
+    await navigator.clipboard.write([
+        new ClipboardItem({
+            ['image/png']: blob
+        })
+    ])
 }
